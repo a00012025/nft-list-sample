@@ -1,12 +1,17 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { GetServerSideProps, NextPage } from 'next';
-import { getToken } from 'next-auth/jwt';
-import { getSession, useSession } from 'next-auth/react';
+import { unstable_getServerSession } from 'next-auth';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { getAuthOptions } from './api/auth/[...nextauth]';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    getAuthOptions(context.req)
+  );
   return {
     props: {
       session,
@@ -38,7 +43,7 @@ const Home: NextPage = () => {
         }}
       >
         <ConnectButton
-          label={account.address ? 'Verify' : 'Connect'}
+          label={connected ? 'Verify' : 'Connect'}
           accountStatus={{
             smallScreen: 'avatar',
             largeScreen: 'full',
