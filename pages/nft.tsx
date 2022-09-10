@@ -15,9 +15,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const NftPage: NextPage = () => {
-  const account = useAccount();
-  const session = useSession();
-  useNeedAuth(session);
+  useNeedAuth();
 
   return (
     <>

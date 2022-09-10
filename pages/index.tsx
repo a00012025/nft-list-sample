@@ -53,18 +53,20 @@ const Home: NextPage = () => {
           }}
         />
       </div>
-      <div>
-        {connected
-          ? `You are connected with ${account.address}`
-          : 'You are not connected'}
-      </div>
-      <div>
-        {authenticated
-          ? 'Congrats! You are authenticated!'
-          : 'Please verify your account'}
-      </div>
-      {authenticated && (
+
+      {!connected ? (
+        <div>You are not connected</div>
+      ) : (
+        <div>You are connected with {account.address}</div>
+      )}
+
+      <br />
+
+      {!authenticated ? (
+        <div>Please verify your account</div>
+      ) : (
         <>
+          <div>Congrats! You are authenticated!</div>
           <div>Now you can access the secret NFT page:</div>
           <a href='/nft'>GO</a>
         </>
