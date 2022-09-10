@@ -1,10 +1,13 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import { unstable_getServerSession } from 'next-auth';
+import _ from 'lodash';
 import { getAuthOptions } from './api/auth/[...nextauth]';
-import Auth from '../components/Auth';
+import Auth from 'components/Auth';
+import useNfts from 'hooks/useNfts';
+import { useRef, useState } from 'react';
+import { isValidEthereumAddress } from 'utils/ethereum';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await unstable_getServerSession(
@@ -20,17 +23,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const NftPage: NextPage = () => {
-  const [data, setData] = useState<any>(null);
-  const [isLoading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    fetch('/api/nfts')
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-      });
-  }, []);
+  const { nfts, loading, setContractAddress, setSlug } = useNfts();
+  const [isContractError, setIsContractError] = useState(false);
+
+  const searchContract = useRef(
+    _.debounce((e) => {
+      const contractAddress = e.target.value;
+      if (contractAddress == '' || isValidEthereumAddress(contractAddress)) {
+        setContractAddress(contractAddress);
+        setIsContractError(false);
+      } else {
+        setIsContractError(true);
+      }
+    }, 500)
+  ).current;
+  const searchSlug = useRef(
+    _.debounce((e) => {
+      setSlug(e.target.value);
+    }, 500)
+  ).current;
 
   return (
     <Auth>
@@ -56,8 +67,39 @@ const NftPage: NextPage = () => {
           }}
         />
       </div>
-      {isLoading && <div>Loading...</div>}
-      {!isLoading && data && (
+      <input
+        placeholder='Search Contract Address'
+        style={{
+          border: '1px solid #ccc',
+          borderColor: isContractError ? 'red' : '#ccc',
+          borderRadius: 4,
+          fontSize: 16,
+          padding: 8,
+          width: '100%',
+        }}
+        onChange={searchContract}
+      />
+      <div style={{ height: 12 }} />
+      <input
+        placeholder='Search Slug'
+        style={{
+          border: '1px solid #ccc',
+          borderRadius: 4,
+          fontSize: 16,
+          padding: 8,
+          width: '100%',
+        }}
+        onChange={searchSlug}
+      />
+      {isContractError && (
+        <div style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+          Please enter a valid contract address
+        </div>
+      )}
+
+      {loading && <div>Loading...</div>}
+      {!loading && nfts.length === 0 && <div>No NFTs found</div>}
+      {!loading && nfts && (
         <div
           style={{
             padding: 12,
@@ -65,7 +107,7 @@ const NftPage: NextPage = () => {
             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
           }}
         >
-          {data?.assets.map((nft: any) => (
+          {nfts.map((nft) => (
             <div
               key={nft.id}
               style={{
@@ -82,7 +124,7 @@ const NftPage: NextPage = () => {
             >
               <Image
                 alt={'NFT image'}
-                src={nft.image_preview_url ?? nft.image_url}
+                src={nft.image}
                 height={200}
                 width={200}
                 objectFit={'cover'}
@@ -91,7 +133,7 @@ const NftPage: NextPage = () => {
                   cursor: 'pointer',
                 }}
               />
-              <div>{nft.collection.name}</div>
+              <div>{nft.collectionName}</div>
               <div
                 style={{
                   display: 'flex',

@@ -3,7 +3,7 @@ import {
   Wallet,
   getWalletConnectConnector,
 } from '@rainbow-me/rainbowkit';
-import { iconUrl } from '../constants/icon';
+import { iconUrl } from 'constants/icon';
 
 export interface MyWalletOptions {
   chains: Chain[];

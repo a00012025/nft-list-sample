@@ -1,4 +1,4 @@
-import '../styles/global.css';
+import 'styles/global.css';
 import type { AppProps } from 'next/app';
 
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
@@ -18,7 +18,7 @@ import {
   RainbowKitSiweNextAuthProvider,
   GetSiweMessageOptions,
 } from '@rainbow-me/rainbowkit-siwe-next-auth';
-import { kryptogo } from '../common/kryptogo';
+import { kryptogo } from 'common/kryptogo';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [chain.mainnet, chain.polygon],
