@@ -2,6 +2,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { GetServerSideProps, NextPage } from 'next';
 import { unstable_getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { getAuthOptions } from './api/auth/[...nextauth]';
@@ -73,7 +74,7 @@ const Home: NextPage = () => {
         <>
           <div>Congrats! You are authenticated!</div>
           <div>Now you can access the secret NFT page:</div>
-          <a href='/nft'>GO</a>
+          <Link href={'/nft'}>GO</Link>
         </>
       )}
     </>
