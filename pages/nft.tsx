@@ -1,9 +1,9 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { GetServerSideProps, NextPage } from 'next';
-import { getToken } from 'next-auth/jwt';
 import { getSession, useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { useAccount } from 'wagmi';
+import { useNeedAuth } from '../hooks/useNeedAuth';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -14,19 +14,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-const Home: NextPage = () => {
+const NftPage: NextPage = () => {
   const account = useAccount();
   const session = useSession();
-
-  const [connected, setConnected] = useState(false);
-  useEffect(() => {
-    setConnected(account.status == 'connected' && account.address != '');
-  }, [account]);
-
-  const [authenticated, setAuthenticated] = useState(false);
-  useEffect(() => {
-    setAuthenticated(session.status == 'authenticated');
-  }, [session]);
+  useNeedAuth(session);
 
   return (
     <>
@@ -38,7 +29,6 @@ const Home: NextPage = () => {
         }}
       >
         <ConnectButton
-          label={account.address ? 'Verify' : 'Connect'}
           accountStatus={{
             smallScreen: 'avatar',
             largeScreen: 'full',
@@ -53,24 +43,8 @@ const Home: NextPage = () => {
           }}
         />
       </div>
-      <div>
-        {connected
-          ? `You are connected with ${account.address}`
-          : 'You are not connected'}
-      </div>
-      <div>
-        {authenticated
-          ? 'Congrats! You are authenticated!'
-          : 'Please verify your account'}
-      </div>
-      {authenticated && (
-        <>
-          <div>Now you can access the secret NFT page:</div>
-          <a href='/nft'>GO</a>
-        </>
-      )}
     </>
   );
 };
 
-export default Home;
+export default NftPage;
