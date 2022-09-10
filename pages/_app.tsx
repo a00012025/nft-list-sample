@@ -29,7 +29,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const demoAppInfo = {
-  appName: 'KryptoGO Wallet Demo',
+  appName: 'KryptoGO Wallet NFT Demo',
 };
 
 const connectors = connectorsForWallets([
