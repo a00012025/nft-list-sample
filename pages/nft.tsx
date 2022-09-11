@@ -7,7 +7,7 @@ import { getAuthOptions } from './api/auth/[...nextauth]';
 import Auth from 'components/Auth';
 import useNfts from 'hooks/useNfts';
 import { useRef, useState } from 'react';
-import { isValidEthereumAddress } from 'utils/ethereum';
+import ethers from 'ethers';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await unstable_getServerSession(
@@ -23,13 +23,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const NftPage: NextPage = () => {
-  const { nfts, loading, setContractAddress, setSlug } = useNfts();
+  const { nfts, loading, setContractAddress, setSlug } = useNfts({});
   const [isContractError, setIsContractError] = useState(false);
 
   const searchContract = useRef(
     _.debounce((e) => {
       const contractAddress = e.target.value;
-      if (contractAddress == '' || isValidEthereumAddress(contractAddress)) {
+      if (contractAddress == '' || ethers.utils.isAddress(contractAddress)) {
         setContractAddress(contractAddress);
         setIsContractError(false);
       } else {
@@ -38,9 +38,7 @@ const NftPage: NextPage = () => {
     }, 500)
   ).current;
   const searchSlug = useRef(
-    _.debounce((e) => {
-      setSlug(e.target.value);
-    }, 500)
+    _.debounce((e) => setSlug(e.target.value), 500)
   ).current;
 
   return (

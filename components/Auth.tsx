@@ -1,6 +1,10 @@
 import { useSession } from 'next-auth/react';
 
-const Auth = ({ children }) => {
+export interface AuthProps {
+  children: React.ReactNode;
+}
+
+const Auth = ({ children }: AuthProps): JSX.Element => {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { status } = useSession({
     required: true,
@@ -11,7 +15,7 @@ const Auth = ({ children }) => {
     return <div>Loading...</div>;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default Auth;

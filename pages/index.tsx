@@ -75,6 +75,12 @@ const Home: NextPage = () => {
           <div>Congrats! You are authenticated!</div>
           <div>Now you can access the secret NFT page:</div>
           <Link href={'/nft'}>GO</Link>
+
+          <div>
+            If you own at least one Demi Human, you can access this secret Demi
+            page:
+          </div>
+          <Link href={'/demi-only'}>GO DEMI</Link>
         </>
       )}
     </>

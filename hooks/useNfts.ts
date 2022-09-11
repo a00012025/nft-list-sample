@@ -2,11 +2,18 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Nft } from 'types/nft';
 
-export default function useNfts() {
+export interface UseNftProps {
+  contractAddress?: string | undefined;
+  slug?: string | undefined;
+}
+
+export default function useNfts(props: UseNftProps) {
   const [nfts, setNfts] = useState<Nft[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [contractAddress, setContractAddress] = useState('');
-  const [slug, setSlug] = useState('');
+  const [contractAddress, setContractAddress] = useState(
+    props.contractAddress ?? ''
+  );
+  const [slug, setSlug] = useState(props.slug ?? '');
 
   // useEffect to fetch nfts on mount
   useEffect(() => {
