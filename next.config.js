@@ -3,8 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['ipfs.io', 'openseauserdata.com', 'lh3.googleusercontent.com',
-    ],
+    domains: ['ipfs.io', 'openseauserdata.com', 'lh3.googleusercontent.com'],
   },
 }
 

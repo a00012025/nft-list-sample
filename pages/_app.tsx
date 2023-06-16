@@ -1,24 +1,24 @@
-import 'styles/global.css';
-import type { AppProps } from 'next/app';
+import "styles/global.css";
+import type { AppProps } from "next/app";
 
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
-import { SessionProvider } from 'next-auth/react';
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { publicProvider } from "wagmi/providers/public";
+import { SessionProvider } from "next-auth/react";
 
-import '@rainbow-me/rainbowkit/styles.css';
+import "@rainbow-me/rainbowkit/styles.css";
 import {
   RainbowKitProvider,
   connectorsForWallets,
   wallet,
   lightTheme,
   darkTheme,
-} from '@rainbow-me/rainbowkit';
+} from "@rainbow-me/rainbowkit";
 import {
   RainbowKitSiweNextAuthProvider,
   GetSiweMessageOptions,
-} from '@rainbow-me/rainbowkit-siwe-next-auth';
-import { kryptogo } from 'common/kryptogo';
+} from "@rainbow-me/rainbowkit-siwe-next-auth";
+import { kryptogo } from "common/kryptogo";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [chain.mainnet, chain.polygon],
@@ -29,16 +29,16 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const demoAppInfo = {
-  appName: 'KryptoGO Wallet NFT Demo',
+  appName: "KryptoGO Wallet NFT Demo",
 };
 
 const connectors = connectorsForWallets([
   {
-    groupName: 'Recommended',
+    groupName: "Recommended",
     wallets: [kryptogo({ chains }), wallet.walletConnect({ chains })],
   },
   {
-    groupName: 'Other',
+    groupName: "Other",
     wallets: [
       wallet.metaMask({ chains }),
       wallet.rainbow({ chains }),
@@ -55,7 +55,7 @@ const wagmiClient = createClient({
 });
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
-  statement: 'Sign in to the KryptoGO + SIWE example app',
+  statement: "Sign in to the KryptoGO + SIWE example app",
 });
 
 function App({ Component, pageProps }: AppProps) {
@@ -69,23 +69,24 @@ function App({ Component, pageProps }: AppProps) {
             appInfo={demoAppInfo}
             chains={chains}
             initialChain={chain.mainnet}
+            // openseaApiKey={process.env.NEXT_PUBLIC_OPENSEA_API_KEY}
             theme={{
               lightMode: lightTheme({
-                accentColor: '#FFC211',
-                accentColorForeground: '#001F58',
-                borderRadius: 'large',
-                fontStack: 'rounded',
-                overlayBlur: 'none',
+                accentColor: "#FFC211",
+                accentColorForeground: "#001F58",
+                borderRadius: "large",
+                fontStack: "rounded",
+                overlayBlur: "none",
               }),
               darkMode: darkTheme({
-                accentColor: '#FFC211',
-                accentColorForeground: '#001F58',
-                borderRadius: 'large',
-                fontStack: 'rounded',
-                overlayBlur: 'none',
+                accentColor: "#FFC211",
+                accentColorForeground: "#001F58",
+                borderRadius: "large",
+                fontStack: "rounded",
+                overlayBlur: "none",
               }),
             }}
-            modalSize='compact'
+            modalSize="compact"
           >
             <Component {...pageProps} />
           </RainbowKitProvider>
